@@ -1,6 +1,6 @@
 {
-  "name": "quasar-browser-extension",
-  "description": "A Quasar web extension",
+  "name": "qbexlinks",
+  "description": "Example of BEX technology in Quasar",
   "version": "1.0.0",
   "manifest_version": 2,
   "icons": {
@@ -8,9 +8,12 @@
     "48": "icons/icon-48x48.png",
     "128": "icons/icon-128x128.png"
   },
+  "options_page": "www/index.html#/options",
   "browser_action": {
-    "default_title": "quasar-browser-extension"
+    "default_title": "quasar-browser-extension",
+    "default_popup": "www/index.html#/popup"
   },
+  "devtools_page": "www/index.html#/devtools",
   "background": {
     "scripts": [
       "www/bex-background.js",

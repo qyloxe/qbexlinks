@@ -1,1 +1,6 @@
 /* Global CSS used within your BEX. This is not preprocessed so this has to be pure CSS. */
+
+/* source from: https://quasar.dev/quasar-cli/developing-browser-extensions/types-of-bex#Web-Page */
+.target-some-header-class {
+  margin-top: 62px;
+}

@@ -104,6 +104,19 @@ export default {
         }
       ]
     }
+  },
+  watch: {
+    leftDrawerOpen: function (val, oldVal) {
+      // source from: https://quasar.dev/quasar-cli/developing-browser-extensions/types-of-bex#Web-Page
+      console.log(`$$ SEND wb.drawer.toggle: open=${val}`)
+      this.$q.bex
+        .send('wb.drawer.toggle', {
+          open: this.leftDrawerOpen // So it knows to make it bigger / smaller
+        })
+        .then(r => {
+          console.log('$$ RESOLVED wb.drawer.toggle')
+        })
+    }
   }
 }
 </script>
