@@ -8,7 +8,7 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
+          @click="toggleDrawer"
         />
 
         <q-toolbar-title>
@@ -103,6 +103,11 @@ export default {
           link: 'https://awesome.quasar.dev'
         }
       ]
+    }
+  },
+  methods: {
+    toggleDrawer () {
+      this.leftDrawerOpen = !this.leftDrawerOpen
     }
   },
   watch: {
