@@ -2,48 +2,19 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleDrawer"
-        />
-
-        <q-toolbar-title>
-          QBexLinks
-        </q-toolbar-title>
-
+        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleDrawer" />
+        <q-toolbar-title>QBexLinks</q-toolbar-title>
         <q-space />
-        <q-btn
-          dense
-          label="Pobierz dane"
-          aria-label="doWebPageGetTable"
-          @click="doWebPageGetTable"
-        />
-        <q-separator vertical inset class="q-ml-xs q-mr-xs"/>
+        <q-btn dense label="Get page data!" aria-label="doWebPageGetTable" @click="doWebPageGetTable" />
+        <q-separator vertical inset class="q-ml-md q-mr-md"/>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      bordered
-      content-class="bg-grey-1"
-    >
+    <q-drawer v-model="leftDrawerOpen" bordered content-class="bg-grey-1">
       <q-list>
-        <q-item-label
-          header
-          class="text-grey-8"
-        >
-          Essential Links
-        </q-item-label>
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item-label header class="text-grey-8">Essential Links</q-item-label>
+        <EssentialLink v-for="link in essentialLinks" :key="link.title" v-bind="link" />
       </q-list>
     </q-drawer>
 
@@ -58,11 +29,9 @@ import EssentialLink from 'components/EssentialLink'
 
 export default {
   name: 'MainLayout',
-
   components: {
     EssentialLink
   },
-
   data () {
     return {
       leftDrawerOpen: false,
@@ -125,9 +94,7 @@ export default {
       this.leftDrawerOpen = !this.leftDrawerOpen
     },
     doWebPageGetTable () {
-      this.$q.bex.send('webpage.getTable', { host: 'ycombinator' }).then(r => {
-        console.log('$$ RESOLVED webpage.getTable', r)
-      })
+      this.$q.bex.send('webpage.getTable')
     },
     doWebPageGetTableReturn (event) {
       console.log('$$ webpage.getTable.return', event.data)
@@ -137,12 +104,7 @@ export default {
   watch: {
     leftDrawerOpen: function (val, oldVal) {
       // source from: https://quasar.dev/quasar-cli/developing-browser-extensions/types-of-bex#Web-Page
-      this.$q.bex
-        .send('wb.drawer.toggle', {
-          open: this.leftDrawerOpen // So it knows to make it bigger / smaller
-        })
-        .then(r => {
-        })
+      this.$q.bex.send('wb.drawer.toggle', { open: this.leftDrawerOpen })
     }
   }
 }
