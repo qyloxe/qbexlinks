@@ -22,7 +22,7 @@
     "persistent": true
   },
   "content_scripts": [{
-    "matches": ["<all_urls>"],
+    "matches": ["https://news.ycombinator.com/*"],
     "js": [
       "www/bex-content-script.js",
       "js/content-script.js"
@@ -35,7 +35,14 @@
     "<all_urls>",
     "storage",
     "tabs",
-    "activeTab"
+    "activeTab",
+    "clipboardRead",
+    "clipboardWrite",
+    "nativeMessaging",
+    "notifications",
+    "unlimitedStorage",
+    "webNavigation",
+    "webRequest"
   ],
   "web_accessible_resources": [
     "www/*",

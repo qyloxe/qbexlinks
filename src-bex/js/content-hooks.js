@@ -39,26 +39,6 @@ const resetIFrameHeight = () => {
 }
 
 /**
- * Content hooks which listen for messages from the BEX in the iFrame
- * @param bridge
- */
-export default function attachContentHooks (bridge) {
-  /**
-   * When the drawer is toggled set the iFrame height to take the whole page.
-   * Reset when the drawer is closed.
-   */
-  bridge.on('wb.drawer.toggle', event => {
-    const payload = event.data
-    if (payload.open) {
-      setIFrameHeight('100%')
-    } else {
-      resetIFrameHeight()
-    }
-    bridge.send(event.eventResponseKey)
-  })
-}
-
-/**
  * The code below will get everything going. Initialise the iFrame with defaults and add it to the page.
  * @type {string}
  */
@@ -84,3 +64,42 @@ Object.assign(iFrame.style, {
   iFrame.src = chrome.runtime.getURL('www/index.html')
   document.body.prepend(iFrame)
 })()
+
+/**
+ *****************************************************************************
+ * Content hooks which listen for messages from the BEX in the iFrame
+ * @param bridge
+ *****************************************************************************
+ */
+export default function attachContentHooks (bridge) {
+  /**
+   * When the drawer is toggled set the iFrame height to take the whole page.
+   * Reset when the drawer is closed.
+   */
+  bridge.on('wb.drawer.toggle', event => {
+    const payload = event.data
+    if (payload.open) {
+      setIFrameHeight('100%')
+    } else {
+      resetIFrameHeight()
+    }
+    bridge.send(event.eventResponseKey)
+  })
+
+  bridge.on('webpage.getTable', event => {
+    const ldata = []
+    if (event.data.host === 'ycombinator') {
+      // let's grab some links from one ycombinator page
+      const eltable = document.getElementsByClassName('itemlist')
+      const eltdleft = eltable[0].getElementsByClassName('storylink')
+      for (let i = 0; i < eltdleft.length; i++) {
+        const url = eltdleft[i].href
+        const title = eltdleft[i].innerText
+        ldata.push({ url, title, checked: false })
+      }
+    }
+    // Not required but resolve our promise (or not?)
+    bridge.send(event.responseKey)
+    bridge.send('webpage.getTable.return', { links: ldata })
+  })
+}

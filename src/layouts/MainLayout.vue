@@ -12,16 +12,23 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          QBexLinks
         </q-toolbar-title>
 
+        <q-space />
+        <q-btn
+          dense
+          label="Pobierz dane"
+          aria-label="doWebPageGetTable"
+          @click="doWebPageGetTable"
+        />
+        <q-separator vertical inset class="q-ml-xs q-mr-xs"/>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
       content-class="bg-grey-1"
     >
@@ -40,7 +47,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container v-if="leftDrawerOpen">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -105,21 +112,36 @@ export default {
       ]
     }
   },
+  created () {
+    // Add our listener
+    this.$q.bex.on('webpage.getTable.return', this.doWebPageGetTableReturn)
+  },
+  beforeDestroy () {
+    // Don't forget to clean it up
+    this.$q.bex.off('webpage.getTable.return', this.doWebPageGetTableReturn)
+  },
   methods: {
     toggleDrawer () {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+    doWebPageGetTable () {
+      this.$q.bex.send('webpage.getTable', { host: 'ycombinator' }).then(r => {
+        console.log('$$ RESOLVED webpage.getTable', r)
+      })
+    },
+    doWebPageGetTableReturn (event) {
+      console.log('$$ webpage.getTable.return', event.data)
+      this.$q.bex.send(event.eventResponseKey)
     }
   },
   watch: {
     leftDrawerOpen: function (val, oldVal) {
       // source from: https://quasar.dev/quasar-cli/developing-browser-extensions/types-of-bex#Web-Page
-      console.log(`$$ SEND wb.drawer.toggle: open=${val}`)
       this.$q.bex
         .send('wb.drawer.toggle', {
           open: this.leftDrawerOpen // So it knows to make it bigger / smaller
         })
         .then(r => {
-          console.log('$$ RESOLVED wb.drawer.toggle')
         })
     }
   }

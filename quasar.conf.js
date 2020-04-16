@@ -65,11 +65,13 @@ module.exports = function (/* ctx */) {
         'QList',
         'QItem',
         'QItemSection',
-        'QItemLabel'
+        'QItemLabel',
+        'QSeparator',
+        'QSpace'
       ],
 
       directives: [
-        'Ripple'
+        // 'Ripple' // removed because of performance penalty
       ],
 
       // Quasar plugins
