@@ -15,6 +15,7 @@ const routes = [
     children: [
       { path: 'options', component: () => import('pages/OptionsPage.vue') },
       { path: 'popup', component: () => import('pages/PopupPage.vue') },
+      { path: 'sidebar', component: () => import('pages/SidebarPage.vue') },
       { path: 'devtools', component: () => import('pages/DevToolsPage.vue') }
     ]
   }

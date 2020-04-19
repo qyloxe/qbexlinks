@@ -23,16 +23,15 @@ export default {
       viewOpened: false
     }
   },
-  created () {
+  async created () {
     // Add our listener
     this.$q.bex.on('webpage.getTable.return', this.doWebPageGetTableReturn)
+    // load links data to VueX from localstore
+    await this.initData()
   },
   beforeDestroy () {
     // Don't forget to clean it up
     this.$q.bex.off('webpage.getTable.return', this.doWebPageGetTableReturn)
-  },
-  async mounted () {
-    await this.initData()
   },
   computed: {
     ...mapGetters('main', ['getLinks']),
@@ -41,18 +40,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions('main', ['initData', 'setLinks', 'addLinks']),
+    ...mapActions('main', ['initData', 'addLinks']),
     toggleView () {
       this.viewOpened = !this.viewOpened
     },
     doWebPageGetTable () {
+      // call BEX event in content-hooks.js - retrieve links from page
       this.$q.bex.send('webpage.getTable')
     },
     async doWebPageGetTableReturn (event) {
-      console.log('$$ webpage.getTable.return', event.data)
       this.$q.bex.send(event.eventResponseKey)
-      const inew = await this.addLinks(event.data)
-      this.$q.notify({ message: `got some data: ${inew} new links...`, color: 'positive', position: 'top' })
+      const icnt = await this.addLinks(event.data.links)
+      this.$q.notify({ message: `${icnt} new links`, color: 'positive', position: 'top' })
     }
   },
   watch: {

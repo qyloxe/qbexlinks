@@ -64,13 +64,18 @@ module.exports = function (/* ctx */) {
         'QToolbarTitle',
         'QBtn',
         'QIcon',
+        'QInput',
         'QList',
         'QItem',
         'QItemSection',
         'QItemLabel',
         'QScrollArea',
         'QSeparator',
-        'QSpace'
+        'QSpace',
+        'QTable',
+        'QTd',
+        'QTh',
+        'QTr'
       ],
 
       directives: [
@@ -79,6 +84,7 @@ module.exports = function (/* ctx */) {
 
       // Quasar plugins
       plugins: [
+        'LocalStorage',
         'Notify'
       ]
     },

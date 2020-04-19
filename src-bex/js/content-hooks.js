@@ -54,6 +54,37 @@ Object.assign(iFrame.style, {
  *****************************************************************************
  */
 export default function attachContentHooks (bridge) {
+  if (document.domain === 'news.ycombinator.com') {
+    // insert dome DOM elements with click events and send checked status via bridge
+    const eltable = document.getElementsByClassName('itemlist')
+    const eltdleft = eltable[0].getElementsByClassName('storylink')
+    for (let i = 0; i < eltdleft.length; i++) {
+      // insert clicker before link:
+      const elclicker = document.createElement('span')
+      const textnode = document.createTextNode('$ADD$')
+      Object.assign(elclicker.style, {
+        color: 'yellow',
+        backgroundColor: 'blue',
+        border: 'thick solid #000000',
+        fontSize: 'small',
+        cursor: 'pointer',
+        marginRight: '8px'
+      })
+      elclicker.appendChild(textnode)
+      // bridge is available as parent scope variable
+      // it works, but the question remains if it is a recommended way of event processing from DOM to Quasar webpage
+      elclicker.onclick = event => {
+        const elanchor = event.target.nextElementSibling
+        const url = elanchor.href
+        const title = elanchor.innerText
+        const ldata = {}
+        ldata[url] = { url, title, checked: true }
+        bridge.send('webpage.getTable.return', { links: ldata })
+      }
+      eltdleft[i].parentNode.insertBefore(elclicker, eltdleft[i])
+    }
+  }
+
   /**
    * When the drawer is toggled set the iFrame height to take the whole page.
    * Reset when the drawer is closed.
@@ -69,15 +100,16 @@ export default function attachContentHooks (bridge) {
   })
 
   bridge.on('webpage.getTable', event => {
-    const ldata = []
+    const ldata = {}
     if (document.domain === 'news.ycombinator.com') {
-      // let's grab some links from this page
+      // let's grab some titles and links from this page
       const eltable = document.getElementsByClassName('itemlist')
       const eltdleft = eltable[0].getElementsByClassName('storylink')
+      // debugger
       for (let i = 0; i < eltdleft.length; i++) {
         const url = eltdleft[i].href
         const title = eltdleft[i].innerText
-        ldata.push({ url, title, checked: false })
+        ldata[url] = { url, title, checked: false }
       }
     }
     // should return ldata but it doesnt work, why?
