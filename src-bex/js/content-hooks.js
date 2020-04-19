@@ -4,22 +4,22 @@
 // this comes from:
 // https://quasar.dev/quasar-cli/developing-browser-extensions/types-of-bex#Web-Page
 const
-  iFrame = document.createElement('iframe'),
-  defaultFrameHeight = '62px'
+  iFrame = document.createElement('iframe')
 
-/**
- * Set the height of our iFrame housing our BEX
- * @param height
- */
-const setIFrameHeight = height => {
-  iFrame.height = height
+const iframeAsMenu = () => {
+  iFrame.height = '62px'
+  iFrame.width = '35%'
+  Object.assign(iFrame.style, {
+    left: '55%'
+  })
 }
 
-/**
- * Reset the iFrame to it's default height e.g The height of the top bar.
- */
-const resetIFrameHeight = () => {
-  setIFrameHeight(defaultFrameHeight)
+const iframeAsPanel = () => {
+  Object.assign(iFrame.style, {
+    left: '0'
+  })
+  iFrame.height = '100%'
+  iFrame.width = '100%'
 }
 
 /**
@@ -27,18 +27,16 @@ const resetIFrameHeight = () => {
  * @type {string}
  */
 iFrame.id = 'bex-app-iframe'
-iFrame.width = '100%'
-resetIFrameHeight()
 
 // Assign some styling so it looks seamless
+iframeAsMenu()
 Object.assign(iFrame.style, {
   position: 'fixed',
   top: '0',
   right: '0',
   bottom: '0',
-  left: '0',
   border: '0',
-  zIndex: '9999999', // Make sure it's on top
+  zIndex: '999990', // Make sure it's on top
   overflow: 'visible'
 })
 
@@ -60,12 +58,12 @@ export default function attachContentHooks (bridge) {
    * When the drawer is toggled set the iFrame height to take the whole page.
    * Reset when the drawer is closed.
    */
-  bridge.on('wb.drawer.toggle', event => {
+  bridge.on('wb.view.toggle', event => {
     const payload = event.data
     if (payload.open) {
-      setIFrameHeight('100%')
+      iframeAsPanel()
     } else {
-      resetIFrameHeight()
+      iframeAsMenu()
     }
     bridge.send(event.eventResponseKey)
   })
@@ -82,8 +80,9 @@ export default function attachContentHooks (bridge) {
         ldata.push({ url, title, checked: false })
       }
     }
-    // Not required but resolve our promise (or not?)
+    // should return ldata but it doesnt work, why?
     bridge.send(event.responseKey)
+    // needs another event to return data
     bridge.send('webpage.getTable.return', { links: ldata })
   })
 }
