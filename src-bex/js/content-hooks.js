@@ -55,7 +55,7 @@ Object.assign(iFrame.style, {
  */
 export default function attachContentHooks (bridge) {
   if (document.domain === 'news.ycombinator.com') {
-    // insert dome DOM elements with click events and send checked status via bridge
+    // insert some DOM elements with click events and send checked status via bridge
     const eltable = document.getElementsByClassName('itemlist')
     const eltdleft = eltable[0].getElementsByClassName('storylink')
     for (let i = 0; i < eltdleft.length; i++) {
@@ -105,7 +105,6 @@ export default function attachContentHooks (bridge) {
       // let's grab some titles and links from this page
       const eltable = document.getElementsByClassName('itemlist')
       const eltdleft = eltable[0].getElementsByClassName('storylink')
-      // debugger
       for (let i = 0; i < eltdleft.length; i++) {
         const url = eltdleft[i].href
         const title = eltdleft[i].innerText
